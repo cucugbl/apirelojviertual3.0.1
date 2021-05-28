@@ -11,7 +11,8 @@ export interface Timbre {
     id_reloj?: number,
     tipo_autenticacion?:string,
     dispositivo_timbre?: string,
-    fec_hora_timbre_servidor?:string
+    fec_hora_timbre_servidor?:string,
+    hora_timbre_diferente:boolean
     }
 
 

@@ -33,16 +33,28 @@ export const getTimbreById = async (req: Request, res: Response): Promise<Respon
 
 export const crearTimbre = async (req: Request, res: Response) => {
     try {
-        const hoy: Date = new Date();
-        const fecha_timbre = new Date();
-        const hora_timbre = hoy.getHours() + ":" + hoy.getMinutes();
+        const hoy: Date =new Date();
         const timbre:Timbre = req.body;
-        timbre.fec_hora_timbre_servidor=hoy.getDate()+"-"+(hoy.getMonth()+1)+"-"+hoy.getFullYear()+" "+hoy.getHours()+":"+hoy.getMinutes()+":"+hoy.getSeconds();
-        const response = await pool.query('INSERT INTO timbres (fec_hora_timbre,accion,tecl_funcion,observacion,latitud,longitud,id_empleado,id_reloj,tipo_autenticacion,dispositivo_timbre,fec_hora_timbre_servidor) VALUES ($1,$2, $3, $4, $5, $6, $7, $8,$9, $10,$11);', [ timbre.fec_hora_timbre, timbre.accion, timbre.tecl_funcion, timbre.observacion, timbre.latitud, timbre.longitud,timbre.id_empleado,timbre.id_reloj,timbre.tipo_autenticacion,timbre.dispositivo_timbre,timbre.fec_hora_timbre_servidor]);
-        
-        
+        timbre.fec_hora_timbre_servidor=hoy.getFullYear()+"-"+(hoy.getMonth()+1)+"-"+hoy.getDate()+" "+hoy.getHours()+":"+hoy.getMinutes()+":"+hoy.getSeconds();
+        const timbreRV: Date = new Date(timbre.fec_hora_timbre || '');
+        const restaTimbresHoras=timbreRV.getHours()-hoy.getHours();
+        const restaTimbresMinutos=timbreRV.getMinutes()-hoy.getMinutes();
+        const restaTimbresDias=timbreRV.getDate()-hoy.getDate();
+        if(restaTimbresDias !=0 || restaTimbresHoras!=0 || restaTimbresMinutos>3 || restaTimbresMinutos<-3){
+            if(restaTimbresHoras==1 && restaTimbresMinutos>58 && restaTimbresMinutos<-58){
+                timbre.hora_timbre_diferente=false;
+            }else if(restaTimbresDias==1 && restaTimbresHoras==23 || restaTimbresHoras==-23 && restaTimbresMinutos>58 && restaTimbresMinutos<-58){
+                timbre.hora_timbre_diferente=false;
+            }else{
+                timbre.hora_timbre_diferente=true;
+            }
+        }else {
+            timbre.hora_timbre_diferente=false;
+        }
+        const response = await pool.query('INSERT INTO timbres (fec_hora_timbre,accion,tecl_funcion,observacion,latitud,longitud,id_empleado,id_reloj,tipo_autenticacion,dispositivo_timbre,fec_hora_timbre_servidor,hora_timbre_diferente) VALUES ($1,$2, $3, $4, $5, $6, $7, $8,$9, $10,$11,$12);', [ timbre.fec_hora_timbre, timbre.accion, timbre.tecl_funcion, timbre.observacion, timbre.latitud, timbre.longitud,timbre.id_empleado,timbre.id_reloj,timbre.tipo_autenticacion,timbre.dispositivo_timbre,timbre.fec_hora_timbre_servidor,timbre.hora_timbre_diferente]);        
         res.json({ 
-            message: 'Timbre creado con éxito'
+            message: 'Timbre creado con éxito',
+            respuestaBDD: response
         })
     } catch (error) {
         console.log(error);
