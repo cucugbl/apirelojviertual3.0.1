@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteEmpresa = exports.getempresa = exports.getempresausuario = exports.verificarLicenciaBDD = exports.actualizarFechaFinEmpresa = exports.actualizarEmpresa = exports.createEmpresa = exports.getEmpresaPorRuc = exports.getEmpresaPorId = void 0;
+exports.deleteEmpresa = exports.getempresa = exports.getEmpresaUsuario = exports.verificarLicenciaBDD = exports.actualizarFechaFinEmpresa = exports.actualizarEmpresa = exports.createEmpresa = exports.getEmpresaPorRuc = exports.getEmpresaPorId = void 0;
 const database_1 = require("../database");
 const getEmpresaPorId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -84,7 +84,7 @@ const verificarLicenciaBDD = () => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.verificarLicenciaBDD = verificarLicenciaBDD;
-const getempresausuario = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getEmpresaUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         //const response: QueryResult = await pool.query('SELECT * FROM empresa INNER JOIN usuario ON empresa.id_empresa = usuario.id_empresa;');
         const response = yield database_1.pool.query('SELECT ruc_emp,nombre_emp,nombre,apellido FROM empresa INNER JOIN usuario ON empresa.id_empresa = usuario.id_empresa GROUP BY nombre_emp,ruc_emp,nombre,apellido;');
@@ -96,7 +96,7 @@ const getempresausuario = (req, res) => __awaiter(void 0, void 0, void 0, functi
         return res.status(500).json('Error al conectarse con la BDD');
     }
 });
-exports.getempresausuario = getempresausuario;
+exports.getEmpresaUsuario = getEmpresaUsuario;
 const getempresa = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield database_1.pool.query("select *,CASE WHEN estado_empresa =true THEN 'Activo' WHEN estado_empresa =false THEN 'Inactivo' ELSE 'other'END from empresa where id_empresa <> 181 order by nombre_emp");
