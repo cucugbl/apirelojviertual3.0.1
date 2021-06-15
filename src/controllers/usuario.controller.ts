@@ -34,7 +34,7 @@ export const loginUsuario = async (req: Request, res: Response) => {
     try {
         const { usuario, contrasena, user_estado } = req.body;
 
-        const response = await pool.query('select empleados.id as idEmpleado, cedula, apellido,nombre,esta_civil,genero,correo,fec_nacimiento,empleados.estado as eestado,mail_alternativo,domicilio,telefono,id_nacionalidad,imagen,codigo,empleados.latitud,empleados.longitud,usuarios.id as id, usuario, contrasena,usuarios.estado as estado,id_rol,id_empleado,app_habilita,usuarios.longitud as uLongitud, usuarios.latitud as uLatitud, frase from usuarios inner join empleados on usuarios.id_empleado=empleados.id WHERE usuario=$1;', [usuario]);
+        const response = await pool.query('select empleados.codigo as idEmpleado, cedula, apellido,nombre,esta_civil,genero,correo,fec_nacimiento,empleados.estado as eestado,mail_alternativo,domicilio,telefono,id_nacionalidad,imagen,codigo,empleados.latitud,empleados.longitud,usuarios.id as id, usuario, contrasena,usuarios.estado as estado,id_rol,id_empleado,app_habilita,usuarios.longitud as uLongitud, usuarios.latitud as uLatitud, frase from usuarios inner join empleados on usuarios.id_empleado=empleados.id WHERE usuario=$1;', [usuario]);
         const usuarios: Usuario[] = response.rows;
         try {
             
