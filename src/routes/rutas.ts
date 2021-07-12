@@ -47,7 +47,7 @@ router.get('/rol', verificarToken, ROL.getRoles);
 
 
 // RUTAS DE EMPLEADOS CONTROLADOR
-router.get('/empleado/lista-empleados', verificarToken, EMPLEADO.getListaEmpleados);
+router.get('/empleado/lista', verificarToken, EMPLEADO.getListaEmpleados);
 router.get('/empleado/horarios', verificarToken, EMPLEADO.getListaHorariosEmpleadoByCodigo);
 
 

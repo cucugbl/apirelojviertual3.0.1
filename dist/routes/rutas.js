@@ -51,7 +51,7 @@ router.get('/timbreEmpleado/:idUsuario', verificarToken_1.verificarToken, TIMBRE
 router.get('/tipoTimbre', verificarToken_1.verificarToken, TIPO_TIMBRE.getTipoTimbre);
 router.get('/rol', verificarToken_1.verificarToken, ROL.getRoles);
 // RUTAS DE EMPLEADOS CONTROLADOR
-router.get('/empleado/lista-empleados', verificarToken_1.verificarToken, EMPLEADO.getListaEmpleados);
+router.get('/empleado/lista', verificarToken_1.verificarToken, EMPLEADO.getListaEmpleados);
 router.get('/empleado/horarios', verificarToken_1.verificarToken, EMPLEADO.getListaHorariosEmpleadoByCodigo);
 // RUTAS DE REPORTES
 router.get('/reporte/timbres', verificarToken_1.verificarToken, REPORTES.getInfoReporteTimbres);

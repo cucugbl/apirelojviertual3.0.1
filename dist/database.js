@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.pool = void 0;
 const pg_1 = require("pg");
 exports.pool = new pg_1.Pool({
-    user: 'fulltime',
-    host: '192.168.0.156',
+    user: 'postgres',
+    host: 'localhost',
     password: 'fulltime',
-    database: 'fulltime_prueba',
+    database: 'fulltimeTimbres',
     port: 5432
 });
 exports.pool.query('Select now()', (err, res) => {
