@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getListaEmpleados = void 0;
+exports.getInfoReporteTimbres = void 0;
 const database_1 = require("../database");
-const getListaEmpleados = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getInfoReporteTimbres = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { codigo, fec_inicio, fec_final } = req.query;
         const response = yield database_1.pool.query('SELECT * FROM timbres WHERE id_empleado = $3 AND fec_hora_timbre BETWEEN $1 AND $2 ORDER BY fec_hora_timbre ASC', [fec_inicio, fec_final, codigo]);
@@ -26,4 +26,4 @@ const getListaEmpleados = (req, res) => __awaiter(void 0, void 0, void 0, functi
         return res.status(500).json('Error al conectarse con la BDD');
     }
 });
-exports.getListaEmpleados = getListaEmpleados;
+exports.getInfoReporteTimbres = getInfoReporteTimbres;

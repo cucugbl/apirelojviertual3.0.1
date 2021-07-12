@@ -4,7 +4,7 @@ import { QueryResult } from 'pg';
 import { Timbre } from '../interfaces/Timbre';
 
 
-export const getListaEmpleados = async (req: Request, res: Response): Promise<Response> => {
+export const getInfoReporteTimbres = async (req: Request, res: Response): Promise<Response> => {
     try {
         const { codigo, fec_inicio, fec_final } = req.query;
         const response: QueryResult = await pool.query('SELECT * FROM timbres WHERE id_empleado = $3 AND fec_hora_timbre BETWEEN $1 AND $2 ORDER BY fec_hora_timbre ASC', [fec_inicio, fec_final, codigo]);

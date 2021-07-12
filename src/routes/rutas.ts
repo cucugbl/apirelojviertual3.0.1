@@ -48,11 +48,11 @@ router.get('/rol', verificarToken, ROL.getRoles);
 
 // RUTAS DE EMPLEADOS CONTROLADOR
 router.get('/empleado/lista-empleados', verificarToken, EMPLEADO.getListaEmpleados);
-router.get('/empleado/lista-horarios', verificarToken, EMPLEADO.getListaHorariosEmpleadoByCodigo);
+router.get('/empleado/horarios', verificarToken, EMPLEADO.getListaHorariosEmpleadoByCodigo);
 
 
 // RUTAS DE REPORTES
-router.get('/reporte/timbres', verificarToken, REPORTES.getListaEmpleados);
+router.get('/reporte/timbres', verificarToken, REPORTES.getInfoReporteTimbres);
 
 
 export default router;

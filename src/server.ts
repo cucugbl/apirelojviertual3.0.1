@@ -1,4 +1,4 @@
-import express, { Application} from 'express';
+import express, { Application } from 'express';
 import indexRoutes from './routes/rutas';
 import morgan from 'morgan';
 const app: Application = express();
@@ -11,10 +11,10 @@ app.use(morgan('dev'));
 
 app.use(express.json());
 
-app.use(express.urlencoded({extended: false})); //para recibir datos livianos, para imagenes es otro
+app.use(express.urlencoded({ extended: false })); //para recibir datos livianos, para imagenes es otro
 
 // Routes
-app.use('/api',indexRoutes);
+app.use('/api', indexRoutes);
 
 app.listen(3000);
 console.log('Server on port', 3000);
