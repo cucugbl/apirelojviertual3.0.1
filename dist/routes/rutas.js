@@ -29,6 +29,11 @@ const REPORTES = __importStar(require("../controllers/reportes.contoller"));
 const ROL = __importStar(require("../controllers/rol.controller"));
 const TIPO_TIMBRE = __importStar(require("../controllers/tipoTimbre.controller"));
 const verificarToken_1 = require("../autenticacion/verificarToken");
+// RUTAS DE EMPLEADOS CONTROLADOR
+router.get('/emple/lista', verificarToken_1.verificarToken, EMPLEADO.getListaEmpleados);
+router.get('/empleados/horarios', verificarToken_1.verificarToken, EMPLEADO.getListaHorariosEmpleadoByCodigo);
+// RUTAS DE REPORTES
+router.get('/reporte/timbres', verificarToken_1.verificarToken, REPORTES.getInfoReporteTimbres);
 router.get('/usuario', USUARIO.getUsers);
 router.get('/usuario/:id', USUARIO.getUserById);
 router.post('/loginUsuario', USUARIO.loginUsuario);
@@ -38,21 +43,10 @@ router.get('/usuariosT/:id', USUARIO.getUserById);
 router.get('/usuarioA', USUARIO.getUserAdmin);
 router.put('/actualizarIDcelular/:id_usuario', USUARIO.actualizarIDcelular);
 router.post('/atraso/admin', USUARIO.justificarAtraso);
-router.get('/empresaId/:id', EMPRESA.getEmpresaPorId);
-router.get('/empresa/:id', EMPRESA.getEmpresaPorRuc);
-router.put('/empresaT/:ruc_emp', EMPRESA.actualizarEmpresa);
-router.put('/empresaF/:ruc_emp', verificarToken_1.verificarToken, EMPRESA.actualizarFechaFinEmpresa);
-router.get('/empresaU', EMPRESA.getEmpresaUsuario);
-router.get('/empresaE', EMPRESA.getempresa);
-router.get('/timbre/:idEmpresa', verificarToken_1.verificarToken, TIMBRES.getTimbreByIdEmpresa);
 router.post('/timbre/admin', verificarToken_1.verificarToken, TIMBRES.crearTimbreJustificadoAdmin);
-router.post('/timbre', verificarToken_1.verificarToken, TIMBRES.crearTimbre);
 router.get('/timbreEmpleado/:idUsuario', verificarToken_1.verificarToken, TIMBRES.getTimbreById);
+router.post('/timbre', verificarToken_1.verificarToken, TIMBRES.crearTimbre);
 router.get('/tipoTimbre', verificarToken_1.verificarToken, TIPO_TIMBRE.getTipoTimbre);
 router.get('/rol', verificarToken_1.verificarToken, ROL.getRoles);
-// RUTAS DE EMPLEADOS CONTROLADOR
-router.get('/empleado/lista', verificarToken_1.verificarToken, EMPLEADO.getListaEmpleados);
-router.get('/empleado/horarios', verificarToken_1.verificarToken, EMPLEADO.getListaHorariosEmpleadoByCodigo);
-// RUTAS DE REPORTES
-router.get('/reporte/timbres', verificarToken_1.verificarToken, REPORTES.getInfoReporteTimbres);
+router.get('/empresaId/:id', EMPRESA.getEmpresaPorId);
 exports.default = router;
