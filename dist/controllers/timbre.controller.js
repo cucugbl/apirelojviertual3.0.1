@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.crearTimbre = exports.getTimbreById = exports.getTimbreByIdEmpresa = void 0;
+exports.crearTimbreJustificadoAdmin = exports.crearTimbre = exports.getTimbreById = exports.getTimbreByIdEmpresa = void 0;
 const database_1 = require("../database");
 const getTimbreByIdEmpresa = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -27,7 +27,7 @@ exports.getTimbreByIdEmpresa = getTimbreByIdEmpresa;
 const getTimbreById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = parseInt(req.params.idUsuario);
-        const response = yield database_1.pool.query('SELECT * FROM timbres WHERE id_empleado = $1 ORDER BY fec_hora_timbre DESC', [id]);
+        const response = yield database_1.pool.query('SELECT * FROM timbres WHERE id_empleado = $1 ORDER BY fec_hora_timbre DESC LIMIT 100', [id]);
         const timbres = response.rows;
         return res.json(timbres);
     }
@@ -72,3 +72,20 @@ const crearTimbre = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.crearTimbre = crearTimbre;
+const crearTimbreJustificadoAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, id_empleado, id_reloj } = req.body;
+        console.log(req.body);
+        const [timbre] = yield database_1.pool.query('INSERT INTO timbres (fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, id_empleado, id_reloj) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id', [fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, id_empleado, id_reloj])
+            .then(result => {
+            return result.rows;
+        });
+        if (!timbre)
+            return res.status(400).jsonp({ message: "No se inserto timbre" });
+        return res.status(200).jsonp({ message: "Timbre Creado exitosamente" });
+    }
+    catch (error) {
+        return res.status(400).jsonp({ message: error });
+    }
+});
+exports.crearTimbreJustificadoAdmin = crearTimbreJustificadoAdmin;

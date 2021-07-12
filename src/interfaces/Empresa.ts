@@ -1,13 +1,24 @@
 export interface Empresa {
-    id_empresa?: number,
-    ruc_emp: string,
-    nombre_emp: string,
-    hash: string,
-    provincia: string,
-    ciudad: string,
-    fecha_inicial_perido:string,
-    fecha_fina_periodo:string,
-    estado_empresa:boolean
+    id: number,
+    nombre: string,
+    ruc: string,
+    direccion: string,
+    telefono: string,
+    correo: string,
+    representante: string,
+    tipo_empresa: string,
+    establecimiento: string,
+    logo?: string,
+    color_p?: string,
+    color_s?: string,
+    dias_cambio?: number,
+    cambios?: boolean,
+    seg_contrasena?: boolean,
+    seg_frase?: boolean,
+    seg_ninguna?: boolean,
+    acciones_timbres?: boolean,
+    num_partida?: string,
+    public_key?: string
 }
 
 

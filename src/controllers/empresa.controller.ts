@@ -7,8 +7,9 @@ import jwt from 'jsonwebtoken';
 export const getEmpresaPorId = async (req: Request, res: Response): Promise<Response> => {
     try {
         const id = parseInt(req.params.id);
-        const response: QueryResult = await pool.query('SELECT * FROM empresa WHERE id_empresa = $1', [id]);
+        const response: QueryResult = await pool.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s, dias_cambio, cambios, password_correo, seg_contrasena, seg_frase, seg_ninguna, acciones_timbres, num_partida, public_key FROM cg_empresa WHERE id = $1', [id]);
         const empresa: Empresa[] = response.rows;
+        console.log(empresa);
         return res.json(empresa[0]);
     } catch (error) {
         console.log(error);
@@ -29,24 +30,6 @@ export const getEmpresaPorRuc = async (req: Request, res: Response): Promise<Res
         console.log(error);
         return res.status(500).json('Error al conectarse con la BDD');
     }
-};
-
-
-
-export const createEmpresa = async (req: Request, res: Response) => {
-    try {
-        const hoy:Date= new Date();  
-        const fecha_inicial_perido=new Date();
-        const fecha_fina_periodo=new Date( hoy.setDate(hoy.getDate()+5))
-        const empresa:Empresa = req.body
-        const response: QueryResult= await pool.query('INSERT INTO public.empresa(ruc_emp, nombre_emp, hash, provincia, ciudad,fecha_inicial_perido, fecha_fina_periodo,estado_empresa) VALUES ( $1, $2, $3, $4, $5,$6,$7,true) returning id_empresa;', [empresa.ruc_emp, empresa.nombre_emp, empresa.hash, empresa.provincia, empresa.ciudad,fecha_inicial_perido, fecha_fina_periodo]);
-        res.status(200).json(response.rows[0])
-
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json('Error al crear empresa');
-    }
-
 };
 
 

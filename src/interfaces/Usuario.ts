@@ -1,7 +1,6 @@
-import { Empresa } from "./Empresa";
-
 export interface Usuario {
     id: number,
+    id_registro_empleado: number,
     usuario: string,
     contrasena: string,
     estado: boolean,
@@ -27,5 +26,6 @@ export interface Usuario {
     imagen:string,
     codigo:string,
     longitud:string,
-    latitud:string
+    latitud:string,
+    id_celular:string
 }

@@ -4,8 +4,8 @@
   "description": "ApiRelojVirtual3",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/server.ts --exec ts-node"
+    "tsc": "tsc -w",
+    "dev": "nodemon ./dist/server.js"
   },
   "repository": {
     "type": "git",
@@ -36,7 +36,7 @@
     "@types/jsonwebtoken": "^8.5.1",
     "@types/morgan": "^1.9.2",
     "@types/pg": "^7.14.11",
-    "nodemon": "^2.0.7",
+    "nodemon": "^2.0.12",
     "ts-node": "^9.1.1",
     "typescript": "^4.3.2"
   }

@@ -1,30 +1,58 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const router = express_1.Router();
-const usuario_controller_1 = require("../controllers/usuario.controller");
-const empresa_controller_1 = require("../controllers/empresa.controller");
-const timbre_controller_1 = require("../controllers/timbre.controller");
-const rol_controller_1 = require("../controllers/rol.controller");
-const tipoTimbre_controller_1 = require("../controllers/tipoTimbre.controller");
+const USUARIO = __importStar(require("../controllers/usuario.controller"));
+const EMPLEADO = __importStar(require("../controllers/empleados.controller"));
+const EMPRESA = __importStar(require("../controllers/empresa.controller"));
+const TIMBRES = __importStar(require("../controllers/timbre.controller"));
+const REPORTES = __importStar(require("../controllers/reportes.contoller"));
+const ROL = __importStar(require("../controllers/rol.controller"));
+const TIPO_TIMBRE = __importStar(require("../controllers/tipoTimbre.controller"));
 const verificarToken_1 = require("../autenticacion/verificarToken");
-router.get('/usuario', usuario_controller_1.getUsers);
-router.get('/usuario/:id', usuario_controller_1.getUserById);
-router.post('/loginUsuario', usuario_controller_1.loginUsuario);
-router.get('/usuarioEmpresa/:id', verificarToken_1.verificarToken, usuario_controller_1.getUserByEmpresa);
-router.get('/usuarioId/:id', usuario_controller_1.getUserByIdEmpresa);
-router.get('/usuariosT/:id', usuario_controller_1.getUserById);
-router.get('/usuarioA', usuario_controller_1.getUserAdmin);
-router.get('/empresaId/:id', empresa_controller_1.getEmpresaPorId);
-router.get('/empresa/:id', empresa_controller_1.getEmpresaPorRuc);
-router.post('/empresa', empresa_controller_1.createEmpresa);
-router.put('/empresaT/:ruc_emp', empresa_controller_1.actualizarEmpresa);
-router.put('/empresaF/:ruc_emp', verificarToken_1.verificarToken, empresa_controller_1.actualizarFechaFinEmpresa);
-router.get('/empresaU', empresa_controller_1.getEmpresaUsuario);
-router.get('/empresaE', empresa_controller_1.getempresa);
-router.get('/timbre/:idEmpresa', verificarToken_1.verificarToken, timbre_controller_1.getTimbreByIdEmpresa);
-router.get('/timbreEmpleado/:idUsuario', verificarToken_1.verificarToken, timbre_controller_1.getTimbreById);
-router.post('/timbre', verificarToken_1.verificarToken, timbre_controller_1.crearTimbre);
-router.get('/rol', verificarToken_1.verificarToken, rol_controller_1.getRoles);
-router.get('/tipoTimbre', verificarToken_1.verificarToken, tipoTimbre_controller_1.getTipoTimbre);
+router.get('/usuario', USUARIO.getUsers);
+router.get('/usuario/:id', USUARIO.getUserById);
+router.post('/loginUsuario', USUARIO.loginUsuario);
+router.get('/usuarioEmpresa', verificarToken_1.verificarToken, USUARIO.getEmpleadosActivos);
+router.get('/usuarioId/:id', USUARIO.getUserByIdEmpresa);
+router.get('/usuariosT/:id', USUARIO.getUserById);
+router.get('/usuarioA', USUARIO.getUserAdmin);
+router.put('/actualizarIDcelular/:id_usuario', USUARIO.actualizarIDcelular);
+router.post('/atraso/admin', USUARIO.justificarAtraso);
+router.get('/empresaId/:id', EMPRESA.getEmpresaPorId);
+router.get('/empresa/:id', EMPRESA.getEmpresaPorRuc);
+router.put('/empresaT/:ruc_emp', EMPRESA.actualizarEmpresa);
+router.put('/empresaF/:ruc_emp', verificarToken_1.verificarToken, EMPRESA.actualizarFechaFinEmpresa);
+router.get('/empresaU', EMPRESA.getEmpresaUsuario);
+router.get('/empresaE', EMPRESA.getempresa);
+router.get('/timbre/:idEmpresa', verificarToken_1.verificarToken, TIMBRES.getTimbreByIdEmpresa);
+router.post('/timbre/admin', verificarToken_1.verificarToken, TIMBRES.crearTimbreJustificadoAdmin);
+router.post('/timbre', verificarToken_1.verificarToken, TIMBRES.crearTimbre);
+router.get('/timbreEmpleado/:idUsuario', verificarToken_1.verificarToken, TIMBRES.getTimbreById);
+router.get('/tipoTimbre', verificarToken_1.verificarToken, TIPO_TIMBRE.getTipoTimbre);
+router.get('/rol', verificarToken_1.verificarToken, ROL.getRoles);
+// RUTAS DE EMPLEADOS CONTROLADOR
+router.get('/empleado/lista-empleados', verificarToken_1.verificarToken, EMPLEADO.getListaEmpleados);
+router.get('/empleado/lista-horarios', verificarToken_1.verificarToken, EMPLEADO.getListaHorariosEmpleadoByCodigo);
+// RUTAS DE REPORTES
+router.get('/reporte/timbres', verificarToken_1.verificarToken, REPORTES.getListaEmpleados);
 exports.default = router;

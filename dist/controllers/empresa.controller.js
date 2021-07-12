@@ -9,13 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteEmpresa = exports.getempresa = exports.getEmpresaUsuario = exports.verificarLicenciaBDD = exports.actualizarFechaFinEmpresa = exports.actualizarEmpresa = exports.createEmpresa = exports.getEmpresaPorRuc = exports.getEmpresaPorId = void 0;
+exports.deleteEmpresa = exports.getempresa = exports.getEmpresaUsuario = exports.verificarLicenciaBDD = exports.actualizarFechaFinEmpresa = exports.actualizarEmpresa = exports.getEmpresaPorRuc = exports.getEmpresaPorId = void 0;
 const database_1 = require("../database");
 const getEmpresaPorId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = parseInt(req.params.id);
-        const response = yield database_1.pool.query('SELECT * FROM empresa WHERE id_empresa = $1', [id]);
+        const response = yield database_1.pool.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s, dias_cambio, cambios, password_correo, seg_contrasena, seg_frase, seg_ninguna, acciones_timbres, num_partida, public_key FROM cg_empresa WHERE id = $1', [id]);
         const empresa = response.rows;
+        console.log(empresa);
         return res.json(empresa[0]);
     }
     catch (error) {
@@ -37,21 +38,6 @@ const getEmpresaPorRuc = (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.getEmpresaPorRuc = getEmpresaPorRuc;
-const createEmpresa = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const hoy = new Date();
-        const fecha_inicial_perido = new Date();
-        const fecha_fina_periodo = new Date(hoy.setDate(hoy.getDate() + 5));
-        const empresa = req.body;
-        const response = yield database_1.pool.query('INSERT INTO public.empresa(ruc_emp, nombre_emp, hash, provincia, ciudad,fecha_inicial_perido, fecha_fina_periodo,estado_empresa) VALUES ( $1, $2, $3, $4, $5,$6,$7,true) returning id_empresa;', [empresa.ruc_emp, empresa.nombre_emp, empresa.hash, empresa.provincia, empresa.ciudad, fecha_inicial_perido, fecha_fina_periodo]);
-        res.status(200).json(response.rows[0]);
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(500).json('Error al crear empresa');
-    }
-});
-exports.createEmpresa = createEmpresa;
 const actualizarEmpresa = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const ruc = (req.params.ruc_emp);
     const { nombre_emp, hash, provincia, ciudad, fechaI, fechaF, estado_empresa, fechaactualizacionlicencia } = req.body;

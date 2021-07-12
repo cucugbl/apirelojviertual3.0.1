@@ -19,9 +19,9 @@ export const getTimbreByIdEmpresa = async (req: Request, res: Response): Promise
 
 export const getTimbreById = async (req: Request, res: Response): Promise<Response> => {
     try {
-        
+
         const id = parseInt(req.params.idUsuario);
-        const response: QueryResult = await pool.query('SELECT * FROM timbres WHERE id_empleado = $1 ORDER BY fec_hora_timbre DESC', [id]);
+        const response: QueryResult = await pool.query('SELECT * FROM timbres WHERE id_empleado = $1 ORDER BY fec_hora_timbre DESC LIMIT 100', [id]);
         const timbres: Timbre[] = response.rows;
         return res.json(timbres);
     } catch (error) {
@@ -33,26 +33,26 @@ export const getTimbreById = async (req: Request, res: Response): Promise<Respon
 
 export const crearTimbre = async (req: Request, res: Response) => {
     try {
-        const hoy: Date =new Date();
-        const timbre:Timbre = req.body;
-        timbre.fec_hora_timbre_servidor=hoy.getFullYear()+"-"+(hoy.getMonth()+1)+"-"+hoy.getDate()+" "+hoy.getHours()+":"+hoy.getMinutes()+":"+hoy.getSeconds();
+        const hoy: Date = new Date();
+        const timbre: Timbre = req.body;
+        timbre.fec_hora_timbre_servidor = hoy.getFullYear() + "-" + (hoy.getMonth() + 1) + "-" + hoy.getDate() + " " + hoy.getHours() + ":" + hoy.getMinutes() + ":" + hoy.getSeconds();
         const timbreRV: Date = new Date(timbre.fec_hora_timbre || '');
-        const restaTimbresHoras=timbreRV.getHours()-hoy.getHours();
-        const restaTimbresMinutos=timbreRV.getMinutes()-hoy.getMinutes();
-        const restaTimbresDias=timbreRV.getDate()-hoy.getDate();
-        if(restaTimbresDias !=0 || restaTimbresHoras!=0 || restaTimbresMinutos>3 || restaTimbresMinutos<-3){
-            if(restaTimbresHoras==1 && restaTimbresMinutos>58 && restaTimbresMinutos<-58){
-                timbre.hora_timbre_diferente=false;
-            }else if(restaTimbresDias==1 && restaTimbresHoras==23 || restaTimbresHoras==-23 && restaTimbresMinutos>58 && restaTimbresMinutos<-58){
-                timbre.hora_timbre_diferente=false;
-            }else{
-                timbre.hora_timbre_diferente=true;
+        const restaTimbresHoras = timbreRV.getHours() - hoy.getHours();
+        const restaTimbresMinutos = timbreRV.getMinutes() - hoy.getMinutes();
+        const restaTimbresDias = timbreRV.getDate() - hoy.getDate();
+        if (restaTimbresDias != 0 || restaTimbresHoras != 0 || restaTimbresMinutos > 3 || restaTimbresMinutos < -3) {
+            if (restaTimbresHoras == 1 && restaTimbresMinutos > 58 && restaTimbresMinutos < -58) {
+                timbre.hora_timbre_diferente = false;
+            } else if (restaTimbresDias == 1 && restaTimbresHoras == 23 || restaTimbresHoras == -23 && restaTimbresMinutos > 58 && restaTimbresMinutos < -58) {
+                timbre.hora_timbre_diferente = false;
+            } else {
+                timbre.hora_timbre_diferente = true;
             }
-        }else {
-            timbre.hora_timbre_diferente=false;
+        } else {
+            timbre.hora_timbre_diferente = false;
         }
-        const response = await pool.query('INSERT INTO timbres (fec_hora_timbre,accion,tecl_funcion,observacion,latitud,longitud,id_empleado,id_reloj,tipo_autenticacion,dispositivo_timbre,fec_hora_timbre_servidor,hora_timbre_diferente) VALUES ($1,$2, $3, $4, $5, $6, $7, $8,$9, $10,$11,$12);', [ timbre.fec_hora_timbre, timbre.accion, timbre.tecl_funcion, timbre.observacion, timbre.latitud, timbre.longitud,timbre.id_empleado,timbre.id_reloj,timbre.tipo_autenticacion,timbre.dispositivo_timbre,timbre.fec_hora_timbre_servidor,timbre.hora_timbre_diferente]);        
-        res.json({ 
+        const response = await pool.query('INSERT INTO timbres (fec_hora_timbre,accion,tecl_funcion,observacion,latitud,longitud,id_empleado,id_reloj,tipo_autenticacion,dispositivo_timbre,fec_hora_timbre_servidor,hora_timbre_diferente) VALUES ($1,$2, $3, $4, $5, $6, $7, $8,$9, $10,$11,$12);', [timbre.fec_hora_timbre, timbre.accion, timbre.tecl_funcion, timbre.observacion, timbre.latitud, timbre.longitud, timbre.id_empleado, timbre.id_reloj, timbre.tipo_autenticacion, timbre.dispositivo_timbre, timbre.fec_hora_timbre_servidor, timbre.hora_timbre_diferente]);
+        res.json({
             message: 'Timbre creado con éxito',
             respuestaBDD: response
         })
@@ -62,3 +62,21 @@ export const crearTimbre = async (req: Request, res: Response) => {
     }
 
 };
+
+export const crearTimbreJustificadoAdmin = async (req: Request, res: Response) => {
+    try {
+        const { fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, id_empleado, id_reloj } = req.body
+        console.log(req.body);
+
+        const [timbre] = await pool.query('INSERT INTO timbres (fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, id_empleado, id_reloj) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id', [fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, id_empleado, id_reloj])
+            .then(result => {
+                return result.rows;
+            });
+
+        if (!timbre) return res.status(400).jsonp({ message: "No se inserto timbre" });
+
+        return res.status(200).jsonp({ message: "Timbre Creado exitosamente" });
+    } catch (error) {
+        return res.status(400).jsonp({ message: error });
+    }
+}
