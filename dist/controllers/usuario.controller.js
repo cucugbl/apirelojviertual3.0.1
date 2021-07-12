@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.justificarAtraso = exports.actualizarIDcelular = exports.getUserByIdEmpresa = exports.getEmpleadosActivos = exports.getUserAdmin = exports.loginUsuario = exports.getUserById = exports.getUsers = void 0;
+exports.justificarAtraso = exports.actualizarIDcelular = exports.getUserByIdEmpresa = exports.loginUsuario = exports.getUserById = exports.getUsers = void 0;
 const database_1 = require("../database");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const md5_typescript_1 = require("md5-typescript");
@@ -43,7 +43,7 @@ const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.getUserById = getUserById;
 const loginUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { usuario, contrasena, user_estado } = req.body;
+        const { usuario, contrasena } = req.body;
         const response = yield database_1.pool.query('select e.id AS id_registro_empleado, e.codigo as idEmpleado, e.cedula, e.apellido, e.nombre, e.esta_civil, e.genero, e.correo, e.fec_nacimiento, ' +
             'e.estado as eestado, e.mail_alternativo, e.domicilio, e.telefono, e.id_nacionalidad, e.imagen, e.codigo, e.latitud, ' +
             'e.longitud, u.id as id, u.usuario, u.contrasena, u.estado as estado, u.id_rol, u.id_empleado, u.app_habilita, ' +
@@ -112,31 +112,27 @@ const loginUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.loginUsuario = loginUsuario;
-const getUserAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const response = yield database_1.pool.query("SELECT *, CASE when user_estado = true THEN 'Activo' when user_estado = false THEN 'Inactivo' ELSE 'other' END FROM usuario WHERE id_rol = 0");
-        const empresa = response.rows;
-        return res.json(empresa);
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(500).json('Error al conectarse con la BDD');
-    }
-});
-exports.getUserAdmin = getUserAdmin;
-const getEmpleadosActivos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const response = yield database_1.pool.query('SELECT e.cedula, e.codigo, ( e.apellido || \' \' || e.nombre) as fullname, e.id, u.id_rol, u.usuario FROM empleados AS e, usuarios AS u WHERE e.id = u.id_empleado AND e.estado = 1 ORDER BY fullname');
-        const usuarios = response.rows;
-        console.log(usuarios);
-        return res.json(usuarios);
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(500).json('Error al conectarse con la BDD');
-    }
-});
-exports.getEmpleadosActivos = getEmpleadosActivos;
+// export const getUserAdmin = async (req: Request, res: Response): Promise<Response> => {
+//     try {
+//         const response: QueryResult = await pool.query("SELECT *, CASE when user_estado = true THEN 'Activo' when user_estado = false THEN 'Inactivo' ELSE 'other' END FROM usuario WHERE id_rol = 0");
+//         const empresa: Usuario[] = response.rows;
+//         return res.json(empresa)
+//     } catch (error) {
+//         console.log(error);
+//         return res.status(500).json('Error al conectarse con la BDD')
+//     }
+// }
+// export const getEmpleadosActivos = async (req: Request, res: Response): Promise<Response> => {
+//     try {
+//         const response: QueryResult = await pool.query('SELECT e.cedula, e.codigo, ( e.apellido || \' \' || e.nombre) as fullname, e.id, u.id_rol, u.usuario FROM empleados AS e, usuarios AS u WHERE e.id = u.id_empleado AND e.estado = 1 ORDER BY fullname');
+//         const usuarios = response.rows;
+//         console.log(usuarios);
+//         return res.json(usuarios);
+//     } catch (error) {
+//         console.log(error);
+//         return res.status(500).json('Error al conectarse con la BDD');
+//     }
+// };
 const getUserByIdEmpresa = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = parseInt(req.params.id);

@@ -32,7 +32,7 @@ export const getUserById = async (req: Request, res: Response): Promise<Response
 
 export const loginUsuario = async (req: Request, res: Response) => {
     try {
-        const { usuario, contrasena, user_estado } = req.body;
+        const { usuario, contrasena } = req.body;
 
         const response = await pool.query('select e.id AS id_registro_empleado, e.codigo as idEmpleado, e.cedula, e.apellido, e.nombre, e.esta_civil, e.genero, e.correo, e.fec_nacimiento, ' +
             'e.estado as eestado, e.mail_alternativo, e.domicilio, e.telefono, e.id_nacionalidad, e.imagen, e.codigo, e.latitud, ' +
@@ -106,31 +106,31 @@ export const loginUsuario = async (req: Request, res: Response) => {
 };
 
 
-export const getUserAdmin = async (req: Request, res: Response): Promise<Response> => {
-    try {
-        const response: QueryResult = await pool.query("SELECT *, CASE when user_estado = true THEN 'Activo' when user_estado = false THEN 'Inactivo' ELSE 'other' END FROM usuario WHERE id_rol = 0");
-        const empresa: Usuario[] = response.rows;
-        return res.json(empresa)
+// export const getUserAdmin = async (req: Request, res: Response): Promise<Response> => {
+//     try {
+//         const response: QueryResult = await pool.query("SELECT *, CASE when user_estado = true THEN 'Activo' when user_estado = false THEN 'Inactivo' ELSE 'other' END FROM usuario WHERE id_rol = 0");
+//         const empresa: Usuario[] = response.rows;
+//         return res.json(empresa)
 
 
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json('Error al conectarse con la BDD')
+//     } catch (error) {
+//         console.log(error);
+//         return res.status(500).json('Error al conectarse con la BDD')
 
-    }
-}
+//     }
+// }
 
-export const getEmpleadosActivos = async (req: Request, res: Response): Promise<Response> => {
-    try {
-        const response: QueryResult = await pool.query('SELECT e.cedula, e.codigo, ( e.apellido || \' \' || e.nombre) as fullname, e.id, u.id_rol, u.usuario FROM empleados AS e, usuarios AS u WHERE e.id = u.id_empleado AND e.estado = 1 ORDER BY fullname');
-        const usuarios = response.rows;
-        console.log(usuarios);
-        return res.json(usuarios);
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json('Error al conectarse con la BDD');
-    }
-};
+// export const getEmpleadosActivos = async (req: Request, res: Response): Promise<Response> => {
+//     try {
+//         const response: QueryResult = await pool.query('SELECT e.cedula, e.codigo, ( e.apellido || \' \' || e.nombre) as fullname, e.id, u.id_rol, u.usuario FROM empleados AS e, usuarios AS u WHERE e.id = u.id_empleado AND e.estado = 1 ORDER BY fullname');
+//         const usuarios = response.rows;
+//         console.log(usuarios);
+//         return res.json(usuarios);
+//     } catch (error) {
+//         console.log(error);
+//         return res.status(500).json('Error al conectarse con la BDD');
+//     }
+// };
 
 
 export const getUserByIdEmpresa = async (req: Request, res: Response): Promise<Response> => {
