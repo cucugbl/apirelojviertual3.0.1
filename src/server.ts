@@ -31,4 +31,4 @@ app.use('/api/roles', ROL_Routes);
 app.use('/api/tipoTimbre', TIPO_TIMBRE_Routes);
 
 app.listen(3001);
-console.log('Server on port', 3001);
+console.log('Server on puerto', 3001);
